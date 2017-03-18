@@ -87,7 +87,7 @@ class App extends Component {
 							<MuiThemeProvider>
 								<div>
 									<TextField
-							      floatingLabelText="Chọn số ngày"
+							      floatingLabelText="Nhập số ngày"
 							      floatingLabelStyle={styles.floatingLabelStyle}
 							      floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										onChange={this.handleChangeStepDate}
