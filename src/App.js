@@ -4,7 +4,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import DatePicker from 'material-ui/DatePicker';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import {orange500, blue500} from 'material-ui/styles/colors';
+import {orange500, blue500, teal500} from 'material-ui/styles/colors';
 import moment from 'moment';
 
 
@@ -16,12 +16,18 @@ injectTapEventPlugin();
 
 const styles = {
   floatingLabelStyle: {
-    color: blue500,
+    color: 'rgb(0, 188, 212)',
   },
   floatingLabelFocusStyle: {
-    color: blue500,
+    color: 'rgb(0, 188, 212)',
   },
+	textFieldStyle: {
+		color: '#266d90',
+		textTransform: 'capitalize',
+	}
 };
+
+const DATE_FORMAT = "dddd, DD / MM / YYYY";
 
 class App extends Component {
 
@@ -32,7 +38,11 @@ class App extends Component {
 			baseDate: '',
 			stepDay: '',
 			resultDate: '',
+			errorText: '',
 		}
+
+		// Initalize locale for moment
+		moment.locale('vi');
 	}
 
 	handleChangeBaseDate = (e, date) => {
@@ -49,13 +59,21 @@ class App extends Component {
 			stepDay,
 		} = this.state;
 
+		const stepDayInNumber = Number(stepDay);
+		if (Number.isNaN(stepDayInNumber)) {
+			return this.setState({ errorText: 'Nhập số thôi nhé, ahihi!' });
+		}
+
 		let resultDate = moment(baseDate).add(stepDay, 'days');
-		resultDate = moment(resultDate).format("dddd, DD-MMMM-YYYY");
-		this.setState({ resultDate: resultDate });
+		resultDate = moment(resultDate).format(DATE_FORMAT);
+		this.setState({
+			resultDate: resultDate ,
+			errorText: '',
+		});
 	};
 
 	formateDateInput = (date) => {
-		return moment(date).format("dddd, DD-MMMM-YYYY");
+		return moment(date).format(DATE_FORMAT);
 	};
 
   render() {
@@ -79,6 +97,7 @@ class App extends Component {
 									<DatePicker
 										hintText="Chọn mốc kỷ niệm"
 										mode="landscape"
+										inputStyle={styles.textFieldStyle}
 										formatDate={this.formateDateInput}
 										onChange={this.handleChangeBaseDate}
 									/>
@@ -90,6 +109,7 @@ class App extends Component {
 							      floatingLabelText="Nhập số ngày"
 							      floatingLabelStyle={styles.floatingLabelStyle}
 							      floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                    errorText={this.state.errorText}
 										onChange={this.handleChangeStepDate}
 							    />
 								</div>
@@ -105,6 +125,7 @@ class App extends Component {
 							      id="text-field"
 										floatingLabelText="Kết quả"
 							      floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+										inputStyle={styles.textFieldStyle}
 							      value={this.state.resultDate}
 							    />
 								</div>
